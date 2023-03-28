@@ -38,7 +38,7 @@ def create_an_post(post:Post):
             p_description = post.p_description ,
             #is_featured = post.is_featured,
             is_published = post.is_published ,
-            posted_by = post.posted_by,
+            posted_by = post. posted_by,
             post_category = post.post_category,
             media_id = post.media_id 
             

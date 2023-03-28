@@ -3,7 +3,7 @@ from sqlalchemy import create_engine            #engine which link our sqlalchem
 from sqlalchemy.orm import sessionmaker
 
 #set up sql to work with our sqlalchemy
-engine=create_engine("postgresql://postgres:root@localhost/Content_Management_db",echo=True) #echo attribute enable us to see whatever sql is generated
+engine=create_engine("postgresql://postgres:root@localhost/Content_management_db",echo=True) #echo attribute enable us to see whatever sql is generated
 
 Base=declarative_base() 
 

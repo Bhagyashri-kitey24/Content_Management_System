@@ -27,7 +27,7 @@ class Post(Base):
     # posted_by = Column(Integer,nullable=False) 
     # post_category = Column(Integer,nullable=False)
     
-    posted_by = Column(String, ForeignKey("users.user_id")) 
+    posted_by = Column(Integer, ForeignKey("users.user_id")) 
     post_category = Column(Integer,ForeignKey("categories.category_id"))    
     
     user= relationship('User', back_populates="posts") #relationship with user

@@ -119,7 +119,7 @@ class Post(BaseModel):  #serializer
     p_description :str 
     #is_featured :bool 
     is_published : bool 
-    # posted_by : int
+    posted_by : int
     post_category : int 
     media_id : int  
     

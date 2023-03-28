@@ -73,40 +73,89 @@ def create_an_user(user:Reset_pass):
 
         return 'check mail'
 
-# def update_pass(Token_reset,SECRET_KEY):
-#     return Token_reset.verify(SECRET_KEY, Token_reset)
-
 def verify_token(token: str):
     try:
         payload = jwt.decode(token, "secret_key", algorithms=["HS256"])
         email = payload.get("email")
         return email
-    except jwt.exceptions.ExpiredSignatureError:
+    except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=400, detail="Token has expired")
-    except jwt.exceptions.InvalidSignatureError:
+    except jwt.InvalidSignatureError:
         raise HTTPException(status_code=400, detail="Invalid token")
-    
-@router.post("/Update_pass/{Token_reset}")
-def reset_password(email_id:str, update:Update_pass):
+ 
+ 
 
-    update_password=db.query(models.User).filter(models.User.email_id==email_id).first()
+@router.put("/Update_password/{email_id}/{Token_reset}")
+def reset_password(email_id: str, Token_reset: str, update: Update_pass):
+    try:
+        # Retrieve the user from the database
+        user = db.query(models.User).filter(models.User.email_id == email_id).first()
+        if user is None:
+            return "User not found"
+        user.password = update.password
+        # Save the changes to the database
+        db.commit()
+        # Verify the reset token
+        verify_token(Token_reset)
+
+        return "Password reset successfully"
+    except Exception as e:
+        return f"Error resetting password: {str(e)}"
+
+
+
+
+
+
+
+
+
+
+# def verify_token(token: str):
+#     try:
+#         payload = jwt.decode(token, "secret_key", algorithms=["HS256"])
+#         email = payload.get("email")
+#         return email
+#     except jwt.exceptions.ExpiredSignatureError:
+#         raise HTTPException(status_code=400, detail="Token has expired")
+#     except jwt.exceptions.InvalidSignatureError:
+#         raise HTTPException(status_code=400, detail="Invalid token")
     
-    update_password.password=update.password 
+   
+# @router.put("/Update_password/{email_id}/{Token_reset}")
+# def reset_password(email_id: str, Token_reset: str, update: Update_pass):
+#     try:
+#         # Retrieve the user from the database
+#         user = db.query(models.User).filter(models.User.email_id == email_id).first()
+#         if user is None:
+#             return "User not found"
+#         user.password = update.password
+#         # Save the changes to the database
+#         db.commit()
+#         # Verify the reset token
+#         verify_token(Token_reset)
+
+#         return "Password reset successfully"
+#     except Exception as e:
+#         return f"Error resetting password: {str(e)}"
+
+
+# # @router.post("/Update_pass/{Token_reset}")
+# # def reset_password(email_id:str, update:Update_pass):
+
+# #     update_password=db.query(models.User).filter(models.User.email_id==email_id).first()
+    
+# #     update_password.password=update.password 
     
   
-    db.commit()
+# #     db.commit()
     
-    # verify token
-    email = verify_token()
-    if not email:
-        raise HTTPException
+# #     # verify token
+# #     email = verify_token()
+# #     if not email:
+# #         raise HTTPException
     
-    return 'password reset successfully'
-   
-
-
-
-    
+# #     return 'password reset successfully'    
     
     
     
