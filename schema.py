@@ -230,3 +230,17 @@ class TokenData(BaseModel):
     username: Optional[str]=None       
   
               
+#-------------------------------------------------------------------------
+
+
+class Reset_pass(BaseModel):
+    email_id:str
+    class Config:
+        orm_mode = True     
+        
+class Update_pass(BaseModel):
+    password:str
+     
+    class Config:
+        orm_mode = True    
+        

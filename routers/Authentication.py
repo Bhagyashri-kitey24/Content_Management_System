@@ -3,7 +3,6 @@ from schema import Login
 from database import db
 from passlib.context import CryptContext
 from routers.U_ser import pwd_context
-# import U_ser
 import models
 from routers import Token 
 router=APIRouter()
@@ -23,9 +22,7 @@ def login(login:Login):
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Incorrect Password")
         
 
-        access_token = Token.create_access_token(
-        data={"sub": user.username}, 
-    )
+        access_token = Token.create_access_token(data={"sub": user.username})
         return {"access_token": access_token, "token_type": "bearer"}
 
 

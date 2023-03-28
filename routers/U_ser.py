@@ -1,14 +1,11 @@
 from fastapi import FastAPI, status,HTTPException , APIRouter
 import  models  
 from schema import *
-# from schema import User , Uresponse, Role_update
 from database import SessionLocal
 from database import db
 from typing import Optional,List 
 from passlib.context import CryptContext
 
-#from .. database import SessionLocal
-#db=SessionLocal()
 
 
 router=APIRouter()
@@ -32,11 +29,6 @@ def get_an_user(user_id:int):
 def get_all_users():
     users=db.query(models.User).all()
     return users
-# @router.get('/usearch/{user_id}',response_model=P_response)
-# def get_an_user(user_id:int):
-#     user=db.query(models.User).filter(models.User.user_id==user_id).first()
-#     return user
-
 
 pwd_context= CryptContext(schemes=["bcrypt"], deprecated="auto")            
 @router.post('/user',response_model=Uresponse,status_code=status.HTTP_201_CREATED)
