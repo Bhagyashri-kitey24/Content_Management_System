@@ -26,9 +26,7 @@ class Show_all_Users(BaseModel):  #serializer
     
     class Config:
        orm_mode=True 
-       
-
-            
+                  
 class Uresponse(BaseModel):  #serializer
     user_id:int
     name:str
@@ -126,40 +124,7 @@ class Post(BaseModel):  #serializer
     
     class Config:
        orm_mode=True
-       
-       
-
-# class Show_posts(BaseModel): # for showing uer id and username in post
-#     user_id:int
-#     username: str
-    
-#     class Config:
-#        orm_mode=True
-       
-
-# class Show_categories(BaseModel): # for showing category id and name in post
-#     category_id:int
-#     category_name:str
-#     class Config:
-#        orm_mode=True
-       
-
-# class P_response(BaseModel):  #serializer
-#     p_id: int
-#     p_title: str 
-#     p_description :str 
-#     is_featured :bool 
-#     is_published : bool 
-#     posted_by : int 
-#     post_category : int 
-#     media_id : int  
-
-#     user:Show_posts
-#     categories:Show_categories
-    
-#     class Config:
-#        orm_mode=True       
-       
+           
        
 class Feature_update(BaseModel):  #serializer
     

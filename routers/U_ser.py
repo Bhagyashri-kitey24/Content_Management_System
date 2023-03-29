@@ -5,14 +5,11 @@ from database import SessionLocal
 from database import db
 from typing import Optional,List 
 from passlib.context import CryptContext
-
-
+from passlib.hash import pbkdf2_sha256
 
 router=APIRouter()
 
-
 #API for User
-
 
 @router.get('/users',response_model=List[Show_all_Users],status_code=200)
 def get_all_users():
@@ -61,7 +58,7 @@ def update_an_user(username:str,user:User):
             user_to_update.username=user.username,
             user_to_update.mobile_number=user.mobile_number
             user_to_update.email_id=user.email_id
-            user_to_update.password=user.password
+            # user_to_update.password=user.password
             user_to_update.profile_photo=user.profile_photo
             user_to_update.bio=user.bio
             db.commit()

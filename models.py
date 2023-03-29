@@ -56,11 +56,3 @@ class Comment(Base):
     
     
     
-
-# class Comment(Base):
-#     __tablename__ = "comments"
-#     comment_id= Column(Integer, primary_key=True , index=True)
-#     comment_description = Column(Text, nullable=False)
-#     comment_by = Column(String,nullable=False ) 
-#     # comment_on= Column(TIMESTAMP)
-#     post_id = Column(Integer, nullable=False)

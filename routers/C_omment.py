@@ -23,7 +23,7 @@ def create_an_comment(comment:Comment):
             db.commit()
             return new_comment
 
-#for deleting 
+#for deleting comments 
 @router.delete('/comment/{comment_id}')
 def delete_comment(comment_id:int):
     comment_to_delete=db.query(models.Comment).filter(models.Comment.comment_id==comment_id).first()

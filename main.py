@@ -1,7 +1,5 @@
 from fastapi import FastAPI,status,HTTPException
-from routers import U_ser, P_ost,C_ategory, Authentication,C_omment,Reset_Password
-
-
+from routers import U_ser,P_ost,C_ategory, Authentication,C_omment,Reset_Password
 
 app=FastAPI()
 

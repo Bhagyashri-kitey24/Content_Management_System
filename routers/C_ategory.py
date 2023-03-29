@@ -8,13 +8,13 @@ router=APIRouter()
 
 # API for Category
 
-# display all items
+# display all Category
 @router.get('/category',response_model=List[C_response],status_code=200)
 def get_all_category():
    categories=db.query(models.Category).all()
    return categories
 
-#get specific item
+#get specific Category
 @router.get('/category/{category_id}',response_model=Category)
 def get_an_category(category_id:int):
     category=db.query(models.Category).filter(models.Category.category_id==category_id).first()
@@ -25,13 +25,9 @@ def get_an_category(category_id:int):
     category=db.query(models.Category).filter(models.Category.category_id==category_id).first()
     return category
 
-#add items to database
+#ceate Category to database
 @router.post('/category',response_model=C_response,status_code=status.HTTP_201_CREATED)
 def create_an_post(category:Category):
-            # db_category=db.query(models.Category).filter(models.Category.category_id==category.category_id).first()
-            # if db_category is not None:
-            #     raise HTTPException(status_code=400,details="you have already account")
-            
             new_category=models.Category(    
             # category_id= category.category_id,
             category_name= category.category_name,
@@ -41,7 +37,7 @@ def create_an_post(category:Category):
             return new_category
 
 
-#for update schema or edit an item......post here
+#for update Category or edit an Category......post here
 @router.put('/category/{category_id}',response_model=Category,status_code=status.HTTP_200_OK)
 def update_an_category(category_id:int,category:Category):
     category_to_update=db.query(models.Category).filter(models.Category.category_id==category_id).first()#fetching the desire record.
@@ -53,7 +49,7 @@ def update_an_category(category_id:int,category:Category):
 
     return category_to_update
 
-#for deleting 
+#for deleting Category
 @router.delete('/category/{category_id}')
 def delete_category(category_id:int):
     category_to_delete=db.query(models.Category).filter(models.Category.category_id==category_id).first()

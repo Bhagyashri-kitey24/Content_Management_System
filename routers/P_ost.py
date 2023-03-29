@@ -27,11 +27,7 @@ def get_an_post(p_id:int):
             
         
 @router.post('/post',response_model=P_response,status_code=status.HTTP_201_CREATED)
-def create_an_post(post:Post):
-            # db_post=db.query(models.Post).filter(models.Post.p_id==post.p_id).first()
-            # if db_post is not None:
-            #     raise HTTPException(status_code=400,details="you have already account")
-                        
+def create_an_post(post:Post):       
             new_post=models.Post(    
             # p_id= post.p_id,
             p_title = post.p_title,

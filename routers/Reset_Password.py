@@ -1,7 +1,9 @@
 from fastapi import FastAPI, status, HTTPException, APIRouter
 from routers.U_ser import pwd_context
-from routers.Token import create_access_token
-from jose import jwt
+from routers.Token import create_access_token , SECRET_KEY 
+import jwt
+from jwt.exceptions import ExpiredSignatureError,InvalidSignatureError
+from passlib.context import CryptContext
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -10,14 +12,9 @@ from email import encoders
 from database import db 
 import models
 from schema import * 
-#...........
-from fastapi.responses import HTMLResponse
-from datetime import datetime, timedelta
-from pydantic import BaseModel
-from typing import Optional
+
 
 router=APIRouter()
-
 
 @router.post('/Password',status_code=status.HTTP_201_CREATED)
 def create_an_user(user:Reset_pass):    
@@ -49,7 +46,7 @@ def create_an_user(user:Reset_pass):
         message["To"] = recipient_email
 
         # Add a message body
-        body = f"Token for password reset {Token_reset}" 
+        body = f"Token for password reset:-    {Token_reset}" 
         message.attach(MIMEText(body, "plain"))
 
         # Create an SMTP object
@@ -67,129 +64,45 @@ def create_an_user(user:Reset_pass):
         smtp_connection.sendmail(sender_email, recipient_email, message.as_string())
 
         # Close the SMTP connection
-        smtp_connection.quit()    
-        
-       
+        smtp_connection.quit()       
 
-        return 'check mail'
-
-def verify_token(token: str):
+        return 'check mail....token send successfully'
+    
+def token_verify(token: str):
     try:
-        payload = jwt.decode(token, "secret_key", algorithms=["HS256"])
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         email = payload.get("email")
         return email
-    except jwt.ExpiredSignatureError:
+    except ExpiredSignatureError:
         raise HTTPException(status_code=400, detail="Token has expired")
-    except jwt.InvalidSignatureError:
+    except InvalidSignatureError:
         raise HTTPException(status_code=400, detail="Invalid token")
  
  
 
-@router.put("/Update_password/{email_id}/{Token_reset}")
+@router.post("/Update_password/{email_id}/{Token_reset}")
+
 def reset_password(email_id: str, Token_reset: str, update: Update_pass):
     try:
         # Retrieve the user from the database
-        user = db.query(models.User).filter(models.User.email_id == email_id).first()
+        user = db.query(models.User).filter(models.User.email_id==email_id).first()
         if user is None:
             return "User not found"
-        user.password = update.password
+        abc= pwd_context.hash(update.password) 
+
+        user.password = abc
         # Save the changes to the database
         db.commit()
         # Verify the reset token
-        verify_token(Token_reset)
-
+        token_verify(Token_reset)
         return "Password reset successfully"
     except Exception as e:
-        return f"Error resetting password: {str(e)}"
+        return f"Error resetting password:{str(e)}"   
+        print(e) 
+    
 
-
-
-
-
-
-
-
-
-
-# def verify_token(token: str):
-#     try:
-#         payload = jwt.decode(token, "secret_key", algorithms=["HS256"])
-#         email = payload.get("email")
-#         return email
-#     except jwt.exceptions.ExpiredSignatureError:
-#         raise HTTPException(status_code=400, detail="Token has expired")
-#     except jwt.exceptions.InvalidSignatureError:
-#         raise HTTPException(status_code=400, detail="Invalid token")
-    
-   
-# @router.put("/Update_password/{email_id}/{Token_reset}")
-# def reset_password(email_id: str, Token_reset: str, update: Update_pass):
-#     try:
-#         # Retrieve the user from the database
-#         user = db.query(models.User).filter(models.User.email_id == email_id).first()
-#         if user is None:
-#             return "User not found"
-#         user.password = update.password
-#         # Save the changes to the database
-#         db.commit()
-#         # Verify the reset token
-#         verify_token(Token_reset)
-
-#         return "Password reset successfully"
-#     except Exception as e:
-#         return f"Error resetting password: {str(e)}"
-
-
-# # @router.post("/Update_pass/{Token_reset}")
-# # def reset_password(email_id:str, update:Update_pass):
-
-# #     update_password=db.query(models.User).filter(models.User.email_id==email_id).first()
-    
-# #     update_password.password=update.password 
-    
-  
-# #     db.commit()
-    
-# #     # verify token
-# #     email = verify_token()
-# #     if not email:
-# #         raise HTTPException
-    
-# #     return 'password reset successfully'    
     
     
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-# # verify the token
-# def verify_token(token:str):
-#     try:
-#         payload = jwt.decode(token, "SECRET_KEY", algorithms=["HS256"])
-#         email = payload.get("email_id")
-#         return email
-#     except jwt.exceptions.ExpiredSignatureError:
-#         raise HTTPException(status_code=400, detail="Token has expired")
-#     except jwt.exceptions.InvalidSignatureError:
-#         raise HTTPException(status_code=400, detail="Invalid token")          
-    
-             
-# @router.get("/reset_password", response_class=Update_pass)
-# async def reset_password(token: str):
-#     # verify token
-#     email = verify_token(token)
-#     if not email:
-#         raise HTTPException
-
-# def is_valid_token(Token_reset): 
-#     if is_valid_token.isalpha():
-#         print("Valid token")
-#     else:
-#         print("Invalid token")
