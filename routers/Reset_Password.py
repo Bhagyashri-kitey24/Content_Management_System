@@ -78,7 +78,6 @@ def token_verify(token: str):
     except InvalidSignatureError:
         raise HTTPException(status_code=400, detail="Invalid token")
  
- 
 
 @router.post("/Update_password/{email_id}/{Token_reset}")
 

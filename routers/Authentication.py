@@ -20,6 +20,7 @@ def login(login:Login):
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Invalid Credentials")
         
         if not check_password(user.password, login.password):
+
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Incorrect Password")
         
 
