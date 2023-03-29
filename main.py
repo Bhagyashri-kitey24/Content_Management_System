@@ -1,5 +1,5 @@
 from fastapi import FastAPI,status,HTTPException
-from routers import U_ser,P_ost,C_ategory, Authentication,C_omment,Reset_Password
+from routers import U_ser,P_ost,C_ategory, Authentication,C_omment,Reset_Password 
 
 app=FastAPI()
 
@@ -9,6 +9,7 @@ app.include_router(C_ategory.router)
 app.include_router(C_omment.router)
 app.include_router(Authentication.router)
 app.include_router(Reset_Password.router)
+# app.include_router(oauth2.router)
 
 
 

@@ -1,4 +1,5 @@
-from fastapi import FastAPI, status,HTTPException , APIRouter
+from fastapi import FastAPI, status,HTTPException , APIRouter,Depends
+from fastapi.security import OAuth2PasswordBearer
 import  models  
 from schema import *
 from database import SessionLocal
@@ -6,24 +7,27 @@ from database import db
 from typing import Optional,List 
 from passlib.context import CryptContext
 from passlib.hash import pbkdf2_sha256
+from routers import U_ser , oauth2
+import schema 
 
-router=APIRouter()
+router=APIRouter(tags=["User"])
 
 #API for User
 
 @router.get('/users',response_model=List[Show_all_Users],status_code=200)
-def get_all_users():
+def get_all_users(current_user:schema.User=Depends(oauth2.get_current_user)):
     users=db.query(models.User).all()
     return users
 
+
                 
 @router.get('/user/{user_id}',response_model=Uresponse)
-def get_an_user(user_id:int):
+def get_an_user(user_id:int,current_user:schema.User=Depends(oauth2.get_current_user)):
     user=db.query(models.User).filter(models.User.user_id==user_id).first()
     return user
 
 @router.get('/usearch/{user_id}',response_model=List[Usearch],status_code=200)
-def get_all_users():
+def get_all_users(current_user:schema.User=Depends(oauth2.get_current_user)):
     users=db.query(models.User).all()
     return users
 
@@ -51,7 +55,7 @@ def create_an_user(user:User):
         return new_user
         
 @router.put('/user/{username}',response_model=User,status_code=status.HTTP_200_OK)
-def update_an_user(username:str,user:User):
+def update_an_user(username:str,user:User,current_user:schema.User=Depends(oauth2.get_current_user)):
             user_to_update=db.query(models.User).filter(models.User.username==username).first()
     
             user_to_update.name=user.name,
@@ -65,7 +69,7 @@ def update_an_user(username:str,user:User):
             return user_to_update
 
 @router.put('/role/{username}',response_model=Uresponse,status_code=status.HTTP_200_OK)
-def update_an_user(username:str,user:Role_update):
+def update_an_user(username:str,user:Role_update,current_user:schema.User=Depends(oauth2.get_current_user)):
             user_to_update=db.query(models.User).filter(models.User.username==username).first()
     
             user_to_update.role=user.role
@@ -75,7 +79,7 @@ def update_an_user(username:str,user:Role_update):
 
 
 @router.delete('/user/{username}')
-def delete_user(username:str):
+def delete_user(username:str,current_user:schema.User=Depends(oauth2.get_current_user)):
     user_to_delete=db.query(models.User).filter(models.User.username==username).first()
 
     if user_to_delete is None:

@@ -1,12 +1,13 @@
-from fastapi import FastAPI, status,HTTPException , APIRouter
+from fastapi import FastAPI, status,HTTPException , APIRouter,Depends
+from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
 from schema import Login
 from database import db
 from passlib.context import CryptContext
 from routers.U_ser import pwd_context
-import models
+import models 
 from routers import Token 
 
-router=APIRouter()
+router=APIRouter(tags=["Authentication"])
 
 
 def check_password(hashed_password, plain_password):
@@ -14,7 +15,8 @@ def check_password(hashed_password, plain_password):
 
 
 @router.post('/login')
-def login(login:Login):
+
+def login(login:OAuth2PasswordRequestForm= Depends()):
         user=db.query(models.User).filter(models.User.username==login.username).first() #find user
         if not user:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Invalid Credentials")

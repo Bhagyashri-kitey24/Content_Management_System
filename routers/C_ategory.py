@@ -1,33 +1,34 @@
-from fastapi import FastAPI, status, HTTPException,APIRouter
+from fastapi import FastAPI, status, HTTPException,APIRouter,Depends
 from database import db 
-import models
+from routers import  oauth2
+import models,schema
 from typing import List
 from schema import *
 
-router=APIRouter()
+router=APIRouter(tags=["Category"])
 
 # API for Category
 
 # display all Category
 @router.get('/category',response_model=List[C_response],status_code=200)
-def get_all_category():
+def get_all_category(current_user:schema.User=Depends(oauth2.get_current_user)):
    categories=db.query(models.Category).all()
    return categories
 
 #get specific Category
 @router.get('/category/{category_id}',response_model=Category)
-def get_an_category(category_id:int):
+def get_an_category(category_id:int,current_user:schema.User=Depends(oauth2.get_current_user)):
     category=db.query(models.Category).filter(models.Category.category_id==category_id).first()
     return category
 
 @router.get('/csearch/{category_id}',response_model=C_response)
-def get_an_category(category_id:int):
+def get_an_category(category_id:int,current_user:schema.User=Depends(oauth2.get_current_user)):
     category=db.query(models.Category).filter(models.Category.category_id==category_id).first()
     return category
 
 #ceate Category to database
 @router.post('/category',response_model=C_response,status_code=status.HTTP_201_CREATED)
-def create_an_post(category:Category):
+def create_an_post(category:Category,current_user:schema.User=Depends(oauth2.get_current_user)):
             new_category=models.Category(    
             # category_id= category.category_id,
             category_name= category.category_name,
